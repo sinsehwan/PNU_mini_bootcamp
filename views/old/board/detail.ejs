@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= id %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= id %></p>
+    <button onclick="javascript:modify();">수정 페이지 이동</button>
+
+    <form method="post" action="/board/modify">
+        <!--빈칸 값 보내게 만들어야 함-->
+        <button id="modifyBtn">수정</button>
+        <!--밑에서 Code에 value 값 변경-->
+        <input type="hidden" name="Code" value=""/>
+        <!--수정 후 상세보기 페이지로 다시 이동할 때 필요한 값 -->
+        <input type="hidden" name="ID" value=""/>
+        <div id="infoview"></div>
+
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        let isModify = false;
+        let cityInfo;
+
+        // 전역적으로 함수를 만드는 게 아니라 바로 사용
+        (id => {
+            console.log(id);
+            $.post({
+                url:'/board/detail',
+                data:`id=${id}`,
+                dataType:'json',
+                success:data=>{
+                    let {rows} = data;
+                    let [city] = rows
+                    console.log(city);
+
+                    cityInfo = city;
+                    setInfoDisplay(city);
+
+                    // 배열 -> map -> 조작 -> return -> 새로운 조작된 배열이 생성
+                    let html = Object.keys(city).map((item, idx) =>
+                        `<div>${idx}. ${item}  ${city[item]}</div>`);
+                    console.log(html);
+                }
+            })
+        })(<%= id %>)
+
+        /*
+            (id => {
+                console.log(id)
+            })(<%= id %>)
+        */
+
+        // 정보 화면에 세팅하는 함수
+        function setInfoDisplay(city)
+        {
+            console.log(city);
+            // 기존 내용 삭제
+            $('#infoview').empty();
+            
+            // 고유한 국가별로 데이터 코드값을 세팅
+            $('[name=Code]').val(city['Code']); 
+            // 속성 이름이 ID인 값을 찾아서 설정
+            $('[name=ID]').val(city['ID']);
+
+            // 새로 구성해서 추가
+
+            // 객체 내에 많은 정보가 있다 => 값을 추출해서 화면에 표기
+            // 1. 직접 입력(객체 구조분해, .연산자 사용)
+            // 2. Objcet.keys('객체'): 멤버 변수 이름 구해서 for문으로 처리
+            //$('body').append(`<div>${city.cityName}</div>`);
+
+            //console.log(Object.keys(city));
+            // 배열에서 데이터를 하나씩 뽑아서 데이터를 조작, 새로운 내용 생성 -> 처리
+            // : map사용
+            Object.keys(city).map((item, idx) =>{
+                        console.log(item, idx)
+                        $('#infoview').append(`
+                            <div id='info-${idx}'>
+                                ${idx}. ${item}  
+                                <input type='text' name='${item}' value='${city[item]}' ${ ( isModify && idx==6 ) ? "" : "disabled"}/>
+                            </div>
+                        `);
+                    });
+        }
+
+        function modify()
+        {
+            if(confirm('수정 화면으로 이동하시겠습니까?'))
+            {
+                // 수정화면
+                console.log('수정');
+                isModify = true;
+
+                // 수정할 수 있는 입력창이 활성화
+                setInfoDisplay(cityInfo);
+                // 속성 추가
+                $('#modifyBtn').attr('', '')
+            }
+            else
+            {
+                // 취소
+            }
+        }
+    </script>
+  </body>
+</html>

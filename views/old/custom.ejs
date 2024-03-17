@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <a href="http://localhost:3000/gettest?no=1234&nm=sdf">get방식 전송 테스트</a>
+    <!-- 
+      - 사용자로부터 어떤 입력을 받아서 서버로 데이터를 전송할 때 사용
+      - action 값은 데이터를 보낼 url 기입, 생략하면 현재페이지가 됨. 
+      - method는 전송방식, 생략하면 get
+    -->
+    <form>
+      <!-- input(텍스트, 날짜, 수치, 이메일, 비번, .. , hidden),
+         select, radio, checkbox, textarea,  .. 
+      -->
+      <!-- 
+        input 요소
+        - 속성 type : 입력의 유형
+        - 속성 name : 데이터를 지칭, 추출할 때 사용하는 이름 혹은 키
+        - 속성 calue : 전달한 값
+      -->
+      <!--<ddd/>단독태그(input, br, img, ...)-->
+      <input type="hidden" name="no" value="5667"/>
+      <input type="hidden" name="nm" value="werts"/>
+      <input type="submit" value="전송"/>
+    </form>
+
+    <br>
+    <div>
+      <fieldset>
+        <!--
+          현재 화면 주소와 데이터를 보낼 주소가 동일하면 action 생략 가능
+        
+          보내는쪽이랑 받는 쪽이랑 같아야 한다.
+          -enctype
+            - application/x-www-form-urlencoded : 데이터를 보내기 전에 인코딩한다 : 기본이코딩 (form-encode)
+            - multipart/form-data : 문자 인코딩 X, 파일 업로드 (form)
+            - text/plain : 텍스트 형식으로 전송
+            - application/json, application/xml : 프론트단에서 js로 전송
+            - 기타 바이너리, ...
+        -->
+        <form action="/posttest" method="post" enctype="application/x-www-form-urlencoded">
+          <input type="email" name="uid" placeholder="아이디" required/>
+          <input type="password" name="upw" placeholder="비밀번호" required/>
+          <input type="submit" value="로그인"/>
+
+        </form>
+      </fieldset>
+    </div>
+
+  </body>
+</html>

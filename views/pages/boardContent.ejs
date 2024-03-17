@@ -1,0 +1,142 @@
+<!-- indexContent Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">RDS 연동 게시판</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard v1</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="card card-warning">
+            <div class="card-header">
+              <h3 class="card-title">국가코드 검색</h3>
+            </div>
+
+            <div class="card-body">
+              <form method="post" id="searchForm">
+                <div class="row">
+                  <div class="col-sm-6">
+
+                    <div class="form-group">
+                      <label>국가코드</label>
+                      <select class="form-control">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>검색어</label>
+                      <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" name="keyword" id="keyword" placeholder="검색어 작성">
+                        <span class="input-group-append">
+                          <button type="submit" class="btn btn-info btn-flat">검색</button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 검색 결과를 뿌리는 화면 -->
+                  <div id="searchResultView">
+                    <p>검색어 : <span>KOR</span></p>
+                    <ul>
+                      <li>서울</li>
+                      <li>부산</li>
+                    </ul>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">도시 정보 목록 - 인구순</h3>
+            </div>
+    
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th style="width: 60px">#</th>
+                    <th>Name</th>
+                    <th>CountryCode</th>
+                    <th>District</th>
+                    <th>Population</th>
+                  </tr>
+                </thead>
+                <tbody>
+              <% for(let {ID, Name, CountryCode, District, Population} of citys){%>
+                <tr>
+                  <td>
+                    <%= ID %>
+                  </td>
+                  <td>
+                    <%= Name %>
+                  </td>
+                  <td>
+                    <%= CountryCode %>
+                  </td>
+                  <td>
+                    <%= District %>
+                  </td>
+                  <td>
+                    <span class="badge bg-danger"><%= Population %></span>
+                  </td>
+                </tr>
+                <% } %>
+                  <tr>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    
+            <div class="card-footer clearfix">
+              <ul class="pagination pagination-sm m-0 float-right">
+                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                <!-- 1 ~ 10 페이지까지 동적으로 1, 2, 3, 10까지 표현-->
+                <% for(let i = 1; i <= 10; i++){%>
+                  <li class="page-item"><a class="page-link" href="/board?pno=<%= i %>"><%= i %></a></li>
+                <% } %>
+                <li class="page-item"><a class="page-link" href="#">»</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 많은 데이터 중에서 특정 데이터(검색어기준)를 추출하는 검색창 -->
+      <div>
+        <!-- 검색(DB, 엘라스틱넷, ...)-->
+        <!-- 검색어 작성 -> 검색 버튼 클릭 -> 검색 요청(ajax) -> 
+        서버 -> 결과 획득 -> 화면 처리(동적 구성, DOM조작)-->
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>

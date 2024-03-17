@@ -1,0 +1,94 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+// app.js를 메모리에 가장 먼저 로드
+var app = require('../app');
+var debug = require('debug')('helloexpress:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+// web(apache | nginx) <-> was(express (nodejs 기반)) <-> db(database)
+//포트 확인, 시그니처포트 3000 사용, 서비스시 80으로 통해서 서비스 제공
+var port = normalizePort(process.env.PORT || '3000');
+// express 객체에 포트 설정
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+// 서버 생성, 차후 채팅 구성시 이부분이 수정 추가
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+//서버 가동
+server.listen(port); // 특정 포트 리슨 처리
+//에러 핸들링 설정
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+//포트 예외값 처리해서 필요한 최종값으로 처리(필터링)
+function normalizePort(val) { // 포트의 정규화
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+// 서버가동시 에러에 대한 이벤트 리스너 등록
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
